@@ -35,6 +35,27 @@ endif()
 rexglue_setup_target(fifastreet GPU_PLUGINS xenos)
 target_include_directories(fifastreet PRIVATE src)
 
+# On-screen football gamepad (src/ios/touch_pad.h): on by default on iOS, --touch_controls=true
+# elsewhere. Not on Windows: rexruntime.dll does not export its static SDL3.
+if(NOT WIN32)
+    find_package(SDL3 REQUIRED CONFIG COMPONENTS Headers)
+    target_link_libraries(fifastreet PRIVATE SDL3::Headers)
+    target_sources(fifastreet PRIVATE src/ios/touch_pad.cpp)
+    target_compile_definitions(fifastreet PRIVATE FIFASTREET_TOUCH=1)
+endif()
+
+# iPhone / iPad (docs/IOS.md): SDK built with patches/rexglue-ios.patch, Vulkan through MoltenVK.
+# The guest vblank comes from the screen (src/ios/display_link.mm, used by the SDK's
+# Presenter::WaitForMonitorVBlank), so 60 fps lands on every display refresh.
+if(CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    enable_language(OBJCXX)
+    target_sources(fifastreet PRIVATE src/ios/display_link.mm)
+    set_source_files_properties(src/ios/display_link.mm PROPERTIES COMPILE_OPTIONS "-fobjc-arc")
+    target_link_libraries(fifastreet PRIVATE "-framework UIKit" "-framework QuartzCore" "-framework Foundation")
+    # rex_wait_display_vblank is looked up with dlsym from the SDK's runtime library; it is
+    # marked visibility("default") + used, so the executable exports it.
+endif()
+
 # The source SDK keeps ImGui private to rexruntime; its public UI headers
 # still require the include directory when compiling the host application.
 # Propagate headers only, keeping the ImGui objects in the shared runtime.

@@ -43,6 +43,11 @@ You need your own copy of the game: an **Xbox 360 ISO of FIFA Street (2012)**. T
 
 Full history: [CHANGELOG.md](CHANGELOG.md).
 
+## iPhone and iPad (in development)
+
+An iOS build with on-screen football controls and a 60 fps lock tied to the screen's refresh is
+in the source tree, not yet tested on a device: [docs/IOS.md](docs/IOS.md).
+
 ## Download and install
 
 **New install**

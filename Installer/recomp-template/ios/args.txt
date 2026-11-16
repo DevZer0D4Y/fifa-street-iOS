@@ -1,0 +1,17 @@
+# FIFA Street iOS launch arguments. This file is copied into the app; a Documents/args.txt on the
+# phone (Finder / Files app) is read after it, so its lines win. Paths are relative to Documents.
+# The other settings come from fifastreet.toml (Installer/payload/Game), copied into the app.
+--game_data_root=GameData
+--user_data_root=userdata
+--cache_root=cache
+--gpu_plugin=xenos
+--render_target_path_vulkan=fbo
+# 60 fps, locked: the guest vblank comes from the screen (src/ios/display_link.mm, CADisplayLink
+# at 60 Hz, through Presenter::WaitForMonitorVBlank), so every game frame lands on a refresh.
+--vsync=true
+--guest_vblank_unlocked=false
+--video_mode_refresh_rate=60
+--fullscreen=true
+--touch_controls=true
+--log_level=info
+--log_file=logs/fifastreet.log
