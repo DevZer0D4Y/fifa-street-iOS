@@ -3133,6 +3133,22 @@ index e573a94..2815268 100644
      find_package(PkgConfig REQUIRED)
      pkg_check_modules(X11_XCB REQUIRED x11-xcb)
      # Required, not optional: vulkan/api.h pulls in <wayland-client.h> on every
+diff --git a/src/ui/game_ui_fonts.cpp b/src/ui/game_ui_fonts.cpp
+index e637829..d424ba3 100644
+--- a/src/ui/game_ui_fonts.cpp
++++ b/src/ui/game_ui_fonts.cpp
+@@ -36,7 +36,11 @@ uint32_t Le32(const uint8_t* p) {
+ uint16_t Be16(const uint8_t* p) { return uint16_t((p[0] << 8) | p[1]); }
+ 
+ bool ReadAt(FILE* file, uint64_t offset, void* out, size_t size) {
++#if defined(_WIN32)
+   if (_fseeki64(file, static_cast<long long>(offset), SEEK_SET) != 0) return false;
++#else
++  if (fseeko(file, static_cast<off_t>(offset), SEEK_SET) != 0) return false;
++#endif
+   return std::fread(out, 1, size, file) == size;
+ }
+ 
 diff --git a/src/ui/presenter.cpp b/src/ui/presenter.cpp
 index d3db6a0..fc381a1 100644
 --- a/src/ui/presenter.cpp

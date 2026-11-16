@@ -137,9 +137,12 @@ Documents/logs          fifastreet.log
 
 ## Open points
 
-- **Not run on a device yet.** First things to check: the Xenos Vulkan backend on MoltenVK (2.0's
-  renderer is tested on Direct3D 12 and Vulkan on PC), the `fbo` render-target path, memory
-  (jetsam limits on 4 GB phones), and the frame time in a match.
+- **Not run on a device yet.** The SDK's Vulkan backend has an Apple / MoltenVK mode (no geometry
+  shaders or wireframe fill required: primitives are converted on the CPU), which iOS inherits,
+  but this game has not been run through it on a phone. First things to check: rendering
+  (`fbo` render-target path), memory (jetsam limits on 4 GB phones) and the frame time in a match.
+- CI (`.github/workflows/ios-check.yml`) builds the patched SDK for iOS with Xcode, compiles the
+  app's iOS sources and runs the touch pad test. It cannot build the game: that needs your copy.
 - Online play and the launcher's social page are Windows programs; on the phone the game runs
   offline unless the online settings are passed in `Documents/args.txt`.
 - The executable contains code recompiled from your copy of the game: never share the app or ipa.
